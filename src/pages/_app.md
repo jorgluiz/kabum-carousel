@@ -1,0 +1,1 @@
+# _app.jsx: Este arquivo é responsável por envolver todas as páginas do seu aplicativo Next.js. Ele importa o estilo global e passa as props Component e pageProps para serem renderizadas.

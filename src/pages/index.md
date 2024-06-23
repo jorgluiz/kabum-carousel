@@ -1,0 +1,1 @@
+# index.jsx: Este arquivo é a página inicial do seu aplicativo Next.js. Ele importa componentes necessários, como Head e Image do Next.js e define o conteúdo da página.

@@ -17,12 +17,24 @@ import Img09 from '../../assets/images/1719235033.webp'
 const images = [Img01, Img02, Img03, Img04, Img05, Img06, Img07, Img08, Img09]
 const totalSlides = images.length
 
+// Interfaces
+interface CarouselState {
+  currentIndex: number
+  isTransitioning: boolean
+}
+
 const Carousel: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState(1)
-  const [isTransitioning, setIsTransitioning] = useState(false)
-  const [isPaused, setIsPaused] = useState(false)
+  // Eu mudei a função para setState com um callback para garantir que a atualização do estado seja baseada no estado anterior,
+  // especialmente quando várias atualizações de estado são dependentes entre si. Isso evita possíveis problemas de atualização assíncrona.
+  // No entanto, considerando que no seu código original os estados estavam separados, podemos manter essa abordagem para a função pauseSlider.
+  // Aqui está o código atualizado mantendo suas funções de estado individuais:
+  const [state, setState] = useState<CarouselState>({
+    currentIndex: 1,
+    isTransitioning: false
+  })
+  const [isPaused, setIsPaused] = useState<boolean>(false)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
-  const animationDuration = 7000 // Tempo da animação de 3 segundos
+  const animationDuration = 7000 // Tempo da animação de 7 segundosz
 
   const startSlider = (): void => {
     intervalRef.current = setInterval(() => {
@@ -53,47 +65,52 @@ const Carousel: React.FC = () => {
 
   useEffect((): (() => void) => {
     startSlider()
+    setIsPaused(false)
     return () => {
       stopSlider()
     }
   }, [])
 
   const prevSlide = (): void => {
-    if (isTransitioning) return // Ignorar se já estiver em transição ou se estiver pausado
-    setIsTransitioning(true)
-    setCurrentIndex((prevIndex) => prevIndex - 1)
+    if (state.isTransitioning) return // Ignorar se já estiver em transição ou se estiver pausado
+    setState((prevState) => ({
+      ...prevState,
+      isTransitioning: true,
+      currentIndex: prevState.currentIndex - 1
+    }))
     if (!isPaused) {
       resetSlider() // Reiniciar o intervalo de animação
     }
   }
 
   const nextSlide = (): void => {
-    if (isTransitioning) return // Ignorar se já estiver em transição
-    setIsTransitioning(true)
-    setCurrentIndex((prevIndex) => prevIndex + 1)
+    if (state.isTransitioning) return // Ignorar se já estiver em transição
+    setState((prevState) => ({
+      ...prevState,
+      isTransitioning: true,
+      currentIndex: prevState.currentIndex + 1
+    }))
     if (!isPaused) {
       resetSlider() // Reiniciar o intervalo de animação
     }
   }
 
   useEffect(() => {
-    if (isTransitioning) {
+    if (state.isTransitioning) {
       const timeout = setTimeout(() => {
-        if (currentIndex === totalSlides + 1) {
-          setIsTransitioning(false)
-          setCurrentIndex(1)
-        } else if (currentIndex === 0) {
-          setIsTransitioning(false)
-          setCurrentIndex(totalSlides)
+        if (state.currentIndex === totalSlides + 1) {
+          setState({ ...state, isTransitioning: false, currentIndex: 1 })
+        } else if (state.currentIndex === 0) {
+          setState({ ...state, isTransitioning: false, currentIndex: totalSlides })
         } else {
-          setIsTransitioning(false)
+          setState((prevState) => ({ ...prevState, isTransitioning: false }))
         }
       }, 420) // Tempo de transição igual ao CSS transition duration
       return (): void => {
         clearTimeout(timeout)
       }
     }
-  }, [currentIndex, isTransitioning])
+  }, [state])
 
   return (
     <>
@@ -101,7 +118,7 @@ const Carousel: React.FC = () => {
         <ArrowButton left onClick={prevSlide}>
           &#10094;
         </ArrowButton>
-        <SliderContent currentIndex={currentIndex} isTransitioning={isTransitioning}>
+        <SliderContent currentIndex={state.currentIndex} isTransitioning={state.isTransitioning}>
           {[images[totalSlides - 1], ...images, images[0]].map((image, index) => (
             <Slide key={index}>
               <Image src={image} alt={`Slide ${index}`} width={800} height={400} />

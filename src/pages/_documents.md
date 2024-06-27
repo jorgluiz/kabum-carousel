@@ -1,1 +1,1 @@
-# _document.jsx: Este arquivo é utilizado para customizar o HTML gerado pelo Next.js. Ele usa a biblioteca styled-components para garantir que os estilos sejam renderizados corretamente no servidor.
+# _document.jsx: Este arquivo é utilizado para customizar o HTML gerado pelo Next.js. Ele usa a biblioteca styled-components para garantir que os estilos sejam renderizados corretamente no servidor. Com styled-components, os estilos são gerados e inseridos no HTML durante a renderização no servidor, garantindo que a página seja entregue ao cliente com todos os estilos aplicados.

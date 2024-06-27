@@ -29,7 +29,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "babel.config.js"
+    "babel.config.js",
+    "eslint.config.mjs" // Certifique-se de que esse arquivo está incluído
   ],
   "exclude": ["node_modules"]
 }

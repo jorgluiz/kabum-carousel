@@ -1,0 +1,1 @@
+#  Lógica de negócios ou interações com APIs

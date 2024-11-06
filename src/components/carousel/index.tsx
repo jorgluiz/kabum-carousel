@@ -24,16 +24,14 @@ interface CarouselState {
 }
 
 const Carousel: React.FC = () => {
-  // Estado para controlar o carregamento inicial
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    setIsLoaded(true) // Marca o componente como carregado assim que ele é montado
+    // Atualiza o estado para false logo após a montagem do componente
+    setIsLoading(false)
   }, [])
-  
-  // Exibe nada (null) até que o componente esteja completamente carregado
-  if (!isLoaded) return null
-    
+
+
   // Eu mudei a função para setState com um callback para garantir que a atualização do estado seja baseada no estado anterior,
   // especialmente quando várias atualizações de estado são dependentes entre si. Isso evita possíveis problemas de atualização assíncrona.
   // No entanto, considerando que no seu código original os estados estavam separados, podemos manter essa abordagem para a função pauseSlider.
@@ -121,6 +119,8 @@ const Carousel: React.FC = () => {
       }
     }
   }, [state])
+
+  if (isLoading) return 
 
   return (
     <>
